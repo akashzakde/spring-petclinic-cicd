@@ -15,7 +15,30 @@ pipeline {
                 git branch: 'main', credentialsId: 'github', url: 'git@github.com:akashzakde/spring-petclinic-cicd.git'
             }
         }
+	stage('Code Analysis'){
+            steps{
+                withSonarQubeEnv(credentialsId: 'sonar-login',installationName: 'sonar-server') {
+               sh 'mvn sonar:sonar'
+             }
+          }
+        }
 
+        stage('QualityGate Test') {
+            steps {
+                    timeout(time: 1, unit: 'HOURS'){
+                    waitForQualityGate abortPipeline: true
+                    }
+                }
+
+        post {
+        success {
+            echo 'Static code analysis and quality gate passed.'
+        }
+        failure {
+            echo 'Static code analysis or quality gate failed. Please investigate and take appropriate action.'
+           }
+         }
+       }
         stage('Build Code'){
             steps{
                 sh 'mvn -s settings.xml clean -DskipTests package'
