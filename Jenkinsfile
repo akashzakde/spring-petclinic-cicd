@@ -7,9 +7,17 @@ pipeline {
     tools{
         maven "MVN"
         jdk "JDK11"
-    }
-
-    stages {
+         }
+    environment {
+        AWS_DEFAULT_REGION = 'ap-south-1'
+        AWS_ACCESS_KEY_ID = credentials('awscreds')
+        AWS_SECRET_ACCESS_KEY = credentials('awscreds')
+        ECR_REGISTRY = '680247317246.dkr.ecr.ap-south-1.amazonaws.com/spring-petclinic'
+        ECS_CLUSTER = 'DevCluster'
+        SERVICE_NAME = 'Pet-Clinic-Dev-SVC'
+	IMAGE_TAG = 'v1'
+                }
+    stages{
         stage('Fetch Code') {
             steps {
                 git branch: 'main', credentialsId: 'github', url: 'git@github.com:akashzakde/spring-petclinic-cicd.git'
@@ -54,22 +62,28 @@ pipeline {
                 sh 'mvn -s settings.xml -Dmaven.test.skip=true -Dmaven.compile.skip=true deploy'
             }
         }
-        stage('Build image'){
-            steps{
-                script{
-                    sh 'docker build -t akashz/spring-petclinic:latest .'
+	stage('Login to ECR') {
+            steps {
+                script {
+                        sh "aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY"
+                    }
+                }
+            }
+        stage('Deploy Docker Image') {
+            steps {
+                script {
+                    sh "docker push $ECR_REGISTRY:$IMAGE_TAG"
                 }
             }
         }
-        stage('Push image'){
-            steps{
-               withCredentials([usernamePassword(credentialsId: 'dockerHub', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
-        	sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
-            sh 'docker push akashz/spring-petclinic:latest'
-            }
-          }
-        }
 
+        stage('Update ECS Service') {
+            steps {
+                script {
+                    sh "aws ecs update-service --cluster $ECS_CLUSTER --service $SERVICE_NAME --force-new-deployment"
+                }
+            }
+        }
     }
        post{
           always {
