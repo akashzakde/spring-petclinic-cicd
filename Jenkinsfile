@@ -18,17 +18,17 @@ pipeline {
 
         stage('Build Code'){
             steps{
-                sh 'mvn clean -DskipTests package'
+                sh 'mvn -s settings.xml clean -DskipTests package'
             }
         }
         stage('Test Code'){
             steps{
-                sh 'mvn test'
+                sh 'mvn -s settings.xml test'
             }
         }
 	stage('Upload Artifact On Nexus Repo'){
             steps{
-                sh 'mvn -s settings.xml deploy'
+                sh 'mvn -s settings.xml -Dmaven.test.skip=true -Dmaven.compile.skip=true deploy'
             }
         }
         stage('Build docker image'){
