@@ -10,7 +10,7 @@ pipeline {
     }
 
     stages {
-        stage('Fetch code from github') {
+        stage('Fetch Code') {
             steps {
                 git branch: 'main', credentialsId: 'github', url: 'git@github.com:akashzakde/spring-petclinic-cicd.git'
             }
@@ -26,19 +26,19 @@ pipeline {
                 sh 'mvn -s settings.xml test'
             }
         }
-	stage('Upload Artifact On Nexus Repo'){
+	stage('Upload Artifact'){
             steps{
                 sh 'mvn -s settings.xml -Dmaven.test.skip=true -Dmaven.compile.skip=true deploy'
             }
         }
-        stage('Build docker image'){
+        stage('Build image'){
             steps{
                 script{
                     sh 'docker build -t akashz/spring-petclinic:latest .'
                 }
             }
         }
-        stage('Push image to Hub'){
+        stage('Push image'){
             steps{
                withCredentials([usernamePassword(credentialsId: 'dockerHub', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
         	sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
