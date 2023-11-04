@@ -69,7 +69,7 @@ pipeline {
                     }
                 }
             }
-        stage('Deploy Docker Image') {
+        stage('Push Image') {
             steps {
                 script {
                     sh "docker push $ECR_REGISTRY:$IMAGE_TAG"
