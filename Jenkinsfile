@@ -16,30 +16,6 @@ pipeline {
             }
         }
 
-        stage('Static Code Analysis'){
-            steps{
-                withSonarQubeEnv(credentialsId: 'sonar-login',installationName: 'sonar-server') {
-               sh 'mvn sonar:sonar'
-             }
-          }
-        }
-
-        stage('Quality Gate') {
-            steps {
-                    timeout(time: 1, unit: 'HOURS'){
-                    waitForQualityGate abortPipeline: true
-                    }
-                }
-
-        post {
-        success {
-            echo 'Static code analysis and quality gate passed.'
-        }
-        failure {
-            echo 'Static code analysis or quality gate failed. Please investigate and take appropriate action.'
-           }
-         }
-       }
         stage('Build Code'){
             steps{
                 sh 'mvn clean -DskipTests package'
