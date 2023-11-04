@@ -12,7 +12,7 @@ pipeline {
     stages {
         stage('Fetch code from github') {
             steps {
-                git branch: 'main', credentialsId: 'github', url: ' git@github.com:akashzakde/simple-java-app.git'
+                git branch: 'main', credentialsId: 'github', url: 'git@github.com:akashzakde/spring-petclinic-cicd.git'
             }
         }
 
@@ -42,23 +42,18 @@ pipeline {
        }
         stage('Build Code'){
             steps{
-                sh 'mvn -s settings.xml clean -DskipTests package'
+                sh 'mvn clean -DskipTests package'
             }
         }
         stage('Test Code'){
             steps{
-                sh 'mvn  -s settings.xml test'
+                sh 'mvn test'
             }
         }
-        stage('Upload Artifact On Nexus Repo'){
-            steps{
-                sh 'mvn -s settings.xml deploy'
-            }
-        }
-         stage('Build docker image'){
+        stage('Build docker image'){
             steps{
                 script{
-                    sh 'docker build -t akashz/springbootapp:latest .'
+                    sh 'docker build -t akashz/spring-petclinic:latest .'
                 }
             }
         }
@@ -66,7 +61,7 @@ pipeline {
             steps{
                withCredentials([usernamePassword(credentialsId: 'dockerHub', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
         	sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
-            sh 'docker push akashz/springbootapp:latest'
+            sh 'docker push akashz/spring-petclinic:latest'
             }
           }
         }
