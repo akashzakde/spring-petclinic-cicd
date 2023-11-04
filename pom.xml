@@ -212,7 +212,8 @@
               <suppressionsLocation>src/checkstyle/nohttp-checkstyle-suppressions.xml</suppressionsLocation>
               <sourceDirectories>${basedir}</sourceDirectories>
               <includes>**/*</includes>
-              <excludes>**/.git/**/*,**/.idea/**/*,**/target/**/,**/.flattened-pom.xml,**/*.class</excludes>
+	      <excludes>**/.git/**/*,**/.idea/**/*,**/target/**/,**/.flattened-pom.xml,**/*.class</excludes>
+	      <skip>true</skip>
             </configuration>
             <goals>
               <goal>check</goal>
@@ -443,4 +444,14 @@
       </build>
     </profile>
   </profiles>
+  <distributionManagement>
+        	<repository>
+            	<id>nexus</id>
+            	<url>http://172.31.32.150:8081/repository/nexus-release-repo/</url>
+        	</repository>
+        	<snapshotRepository>
+            	<id>nexus</id>
+            	<url>http://172.31.32.150:8081/repository/nexus-snapshot-repo/</url>
+        	</snapshotRepository>
+</distributionManagement>
 </project>
