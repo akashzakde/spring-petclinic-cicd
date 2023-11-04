@@ -26,6 +26,11 @@ pipeline {
                 sh 'mvn test'
             }
         }
+	stage('Upload Artifact On Nexus Repo'){
+            steps{
+                sh 'mvn -s settings.xml deploy'
+            }
+        }
         stage('Build docker image'){
             steps{
                 script{
