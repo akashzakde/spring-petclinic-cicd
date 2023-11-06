@@ -15,7 +15,7 @@ pipeline {
         ECR_REGISTRY = '680247317246.dkr.ecr.ap-south-1.amazonaws.com/spring-petclinic'
         ECS_CLUSTER = 'DevCluster'
         SERVICE_NAME = 'Pet-Clinic-Dev-SVC'
-	IMAGE_TAG = 'v1'
+	IMAGE_TAG = 'v2'
                 }
     stages{
         stage('Fetch Code') {
@@ -69,6 +69,13 @@ pipeline {
                     }
                 }
             }
+        stage('Build Image') {
+            steps {
+                script {
+                    sh "docker build -t $ECR_REGISTRY:$IMAGE_TAG"
+                }
+            }
+        }
         stage('Push Image') {
             steps {
                 script {
