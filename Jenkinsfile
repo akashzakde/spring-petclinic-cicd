@@ -15,7 +15,7 @@ pipeline {
         ECR_REGISTRY = '680247317246.dkr.ecr.ap-south-1.amazonaws.com/spring-petclinic'
         ECS_CLUSTER = 'DevCluster'
         SERVICE_NAME = 'Pet-Clinic-Dev-SVC'
-	IMAGE_TAG = 'v2'
+	IMAGE_TAG = 'latest'
                 }
     stages{
         stage('Fetch Code') {
