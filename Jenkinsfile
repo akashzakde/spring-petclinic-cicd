@@ -26,7 +26,11 @@ pipeline {
 	stage('Code Analysis'){
             steps{
                 withSonarQubeEnv(credentialsId: 'sonar-login',installationName: 'sonar-server') {
-               sh 'mvn sonar:sonar'
+               sh 'mvn clean verify sonar:sonar \
+                   -Dsonar.projectKey=Pet-Clinic \
+                   -Dsonar.projectName='Pet-Clinic' \
+                   -Dsonar.host.url=http://172.31.37.229:9000 \
+                   -Dsonar.token=sqp_7b41bc453b1edc9f09edefc9fd6a3a9a98951e7d'
              }
           }
         }
