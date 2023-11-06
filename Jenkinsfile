@@ -27,10 +27,10 @@ pipeline {
             steps{
                 withSonarQubeEnv(credentialsId: 'sonar-login',installationName: 'sonar-server') {
                sh '''mvn clean verify sonar:sonar \
-          -Dsonar.projectKey=PetClinic-2 \
-          -Dsonar.projectName='PetClinic-2' \
-          -Dsonar.host.url=http://172.31.37.229:9000 \
-          -Dsonar.token=sqp_e51c96f8a400fb3d657169701879bc0715cc7349'''
+  -Dsonar.projectKey=PetClinic-3 \
+  -Dsonar.projectName='PetClinic-3' \
+  -Dsonar.host.url=http://13.127.228.209:9000 \
+  -Dsonar.token=sqp_a9a2a730f8e8a246f5b25eda32b5b3fb94b01ce3'''
              }
           }
         }
