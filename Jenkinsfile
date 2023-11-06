@@ -72,7 +72,7 @@ pipeline {
         stage('Build Image') {
             steps {
                 script {
-                    sh "docker build -t $ECR_REGISTRY:$IMAGE_TAG"
+                    sh "docker build -t $ECR_REGISTRY:$IMAGE_TAG ."
                 }
             }
         }
