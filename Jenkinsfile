@@ -73,7 +73,10 @@ pipeline {
         stage('Build Image') {
             steps {
                 script {
-                    sh "docker build -t $ECR_REGISTRY:$IMAGE_TAG ."
+                    sh '''
+	   	docker build -t spring-petclinic .
+		docker tag spring-petclinic:latest "$ECR_REGISTRY:$IMAGE_TAG"
+		       '''	
                 }
             }
         }
