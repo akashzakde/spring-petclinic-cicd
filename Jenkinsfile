@@ -63,11 +63,6 @@ pipeline {
                 sh 'mvn -s settings.xml test'
             }
         }
-	stage('Upload Artifact'){
-            steps{
-                sh 'mvn -s settings.xml -Dmaven.test.skip=true -Dmaven.compile.skip=true deploy'
-            }
-        }
 	stage('Login to ECR') {
             steps {
                 script {
