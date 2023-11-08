@@ -13,8 +13,10 @@ pipeline {
         AWS_ACCESS_KEY_ID = credentials('awscreds')
         AWS_SECRET_ACCESS_KEY = credentials('awscreds')
         ECR_REGISTRY = '680247317246.dkr.ecr.ap-south-1.amazonaws.com/spring-petclinic'
-        ECS_CLUSTER = 'DevCluster'
-        SERVICE_NAME = 'Pet-Clinic-Dev-SVC'
+        DEV_ECS_CLUSTER = 'DevCluster'
+        DEV_SERVICE_NAME = 'Pet-Clinic-Dev-SVC'
+	PROD_ECS_CLUSTER = 'ProdCluster'
+	PROD_SERVICE_NAME = 'Pet-Clinic-Prod-SVC'
 	IMAGE_TAG = 'latest'
                 }
     stages{
@@ -88,13 +90,32 @@ pipeline {
             }
         }
 
-        stage('Update ECS Service') {
+        stage('Deploy To Stage Env') {
             steps {
                 script {
-                    sh "aws ecs update-service --cluster $ECS_CLUSTER --service $SERVICE_NAME --force-new-deployment"
+                    sh "aws ecs update-service --cluster $DEV_ECS_CLUSTER --service $DEV_SERVICE_NAME --force-new-deployment"
                 }
             }
         }
+          stage('Manual Approval for Production Deployment') {
+            when {
+                expression {
+                    currentBuild.resultIsBetterOrEqualTo('SUCCESS')
+                }
+            }
+            steps {
+                // Added manual approval for Prod Deployment
+                input 'Have you done sanity check for deployment to production?'
+            }
+        }
+
+	stage('Deploy to Prod') {
+            steps {
+                script {
+                    sh "aws ecs update-service --cluster $PROD_ECS_CLUSTER --service $PROD_SERVICE_NAME --force-new-deployment"
+                }
+            }
+        }  
     }
        post{
           always {
