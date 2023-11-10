@@ -103,6 +103,7 @@ pipeline {
             }
             steps {
                 // Added manual approval for Prod Deployment
+                timeout(activity: true, time: 1, unit: 'DAYS')
                 input 'Have you done sanity check for deployment to production?'
             }
         }
