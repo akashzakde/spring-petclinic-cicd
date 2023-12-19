@@ -2,7 +2,7 @@
 
 This project is all about CICD pipeline . We are going to create CICD project by simply hosting spring boot application on AWS ECS .
 
-**This is push based deployemnt approach**
+**This is push based deployemnt approach.**
 
 ## Git Repository For application code available at below link:
 
