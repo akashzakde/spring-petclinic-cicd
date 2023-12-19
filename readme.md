@@ -10,7 +10,7 @@ https://github.com/akashzakde/spring-petclinic-cicd.git
 
 -  Jenkins
 -  Git
--  MAven
+-  Maven
 -  SonarQube Scanner & Server
 -  Nexus Sonatype repository manager
 -  AWS ECR 
