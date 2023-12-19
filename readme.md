@@ -1,4 +1,4 @@
-# This CICD Pipeline Project 
+# CICD Pipeline Project 
 
 This project is all about CICD pipeline . We are going to create CICD project by simply hosting spring boot application on AWS ECS .
 
